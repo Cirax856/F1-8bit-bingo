@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="black">
+        <title>Formula 8-BIT Bingo</title>
+        <link rel="stylesheet" type="text/css" href="./style.css">
+        <style>body { background-color: black; }</style>
+    </head>
+    <body>
+        <div class="saveOptions">
+            <div class="optionContainer">
+                <button class="exit" onclick="closeSave();">X</button>
+
+                <button class="saveLocal" onclick="saveLocal();">SAVE TO LOCAL STORAGE</button>
+                <button class="saveCopy" onclick="saveCopy();">COPY AS TEXT</button>
+                <button onclick="saveFile();">SAVE AS FILE</button>
+            </div>
+        </div>
+
+        <div class="loadOptions">
+            <div class="optionContainer">
+                <button class="exit" onclick="closeLoad();">X</button>
+
+                <button class="loadLocal" onclick="loadLocal();">LOAD FROM LOCAL STORAGE</button>
+                <button class="loadCopy" onclick="loadCopy();">LOAD FROM CLIPBOARD</button>
+                <input type="file" id="input" onclick="loadFile();" />
+            </div>
+        </div>
+
+        <div class="loadingAnimation"><p>LOADING</p></div>
+
+        <div class="title">FORMULA 1 BINGO 2025</div>
+        <div class="bingoContainer"></div>
+
+        <div class="saveload">
+            <button onclick="generate();">REGENERATE</button>
+            <button onclick="save();">SAVE</button>
+            <button onclick="load();">LOAD</button>
+        </div>
+        <div class="credits">
+            <a href="https://formula8bit.com/" target="_blank">
+                <p>store</p>
+                <div>
+                    <img src="./images/logo.png" />
+                </div>
+            </a>
+            <a href="https://www.instagram.com/formula8bit/" target="_blank">
+                <p>@formula8bit</p>
+                <div>
+                    <img src="./images/instagram.png" />
+                </div>
+            </a>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>
