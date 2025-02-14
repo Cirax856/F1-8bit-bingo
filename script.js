@@ -60,6 +60,12 @@ function generateEmpty() {
         img.src = './images/logo.png';
         img.classList.add("bingoImage");
         bingoContainer.appendChild(img);
+
+        if (i !== 12) {
+            img.addEventListener('click', function() {
+                img.classList.toggle('clicked');
+            });
+        }
     }
 
     loadingAnimation.style.display = "none";
