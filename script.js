@@ -265,3 +265,42 @@ function loadFile(data) {
 function closeLoad() {
     document.querySelector('.loadOptions').style.visibility = "hidden";
 }
+
+async function status() {
+    document.querySelector('.status').style.visibility = "visible";
+
+    const response = await fetch("https://api.github.com/gists/200a7bf9feb52bf7b9707ea31ecb083e");
+    const gist = await response.json();
+    const gistResponse = await fetch(gist.files["f1bingo.json"].raw_url);
+    const data = await gistResponse.json();
+
+    const statusContainer = document.querySelector('.statusContainer');
+    statusContainer.innerHTML = "";
+
+    for (const card in data) {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('statusItem');
+
+        const img = document.createElement('img');
+        img.src = `./images/icon/${card}`;
+
+        if (data[card] === null) {
+            wrapper.classList.add('gray');
+        }
+
+        if (data[card] === false) {
+            wrapper.classList.add('red');
+        }
+
+        if (data[card] === true) {
+            wrapper.classList.add('green');
+        }
+
+        wrapper.appendChild(img);
+        statusContainer.appendChild(wrapper);
+    }
+}
+
+function closeStatus() {
+    document.querySelector('.status').style.visibility = "hidden";
+}
