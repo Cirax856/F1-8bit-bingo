@@ -1,11 +1,24 @@
 window.addEventListener("load", (event) => {
-    if (localStorage.getItem('bingo') !== null)
-    {
-        generateEmpty();
-        loadLocal();
+    const urlParams = new URLSearchParams(window.location.search);
+    const compressed = urlParams.get('data');
+
+    if (compressed) {
+        try {
+            const decoded = LZString.decompressFromBase64(decodeURIComponent(compressed));
+            const data = JSON.parse(decoded);
+            
+            loadUrl(data);
+        } catch (e) {
+            console.error('Error decompiling link (possible wrong link): ', e);
+        }
+    } else {
+        if (localStorage.getItem('bingo') !== null) {
+            generateEmpty();
+            loadLocal();
+        } else {
+            generate();
+        }
     }
-    else
-        generate();
 });
 
 function generate() {
@@ -17,7 +30,7 @@ function generate() {
 
     const audio = new Audio('./soundeffects/riser.mp3');
     audio.loop = false;
-    audio.play();
+    audio.play().catch(e => {});
 
     for (let i = 0; i < maxLoop; i++) {
         setTimeout(() => {
@@ -167,6 +180,32 @@ function load() {
     document.querySelector('.loadOptions').style.visibility = "visible";
 }
 
+function loadUrl(data) {
+    const bingoContainer = document.querySelector('.bingoContainer');
+    const loadingAnimation = document.querySelector('.loadingAnimation');
+
+    for (let i = 0; i < 25; i++) {
+        const img = document.createElement("img");
+        img.src = `./images/icon/${data[i][0]}`;
+        img.classList.add("bingoImage");
+        bingoContainer.appendChild(img);
+
+        if (data[i][1])
+            img.classList.add('clicked');
+
+        if (i == 12) {
+            img.classList.add('clicked');
+        } else {
+            img.addEventListener('click', function() {
+                img.classList.toggle('clicked');
+            });
+        }
+    }
+
+    loadingAnimation.style.display = "none";
+    bingoContainer.style.visibility = "visible";
+}
+
 function loadLocal() {
     var data = '';
 
@@ -177,7 +216,7 @@ function loadLocal() {
         audio.loop = false;
         audio.play();
 
-        console.log(err);
+        console.error(err);
     }
 
     const bingoContainer = document.querySelector('.bingoContainer')
@@ -190,7 +229,7 @@ function loadLocal() {
 
     const audio = new Audio('./soundeffects/saved.wav');
     audio.loop = false;
-    audio.play();
+    audio.play().catch(e => {});
 
     closeLoad();
 }
@@ -203,7 +242,6 @@ function loadCopy() {
             const bingoContainer = document.querySelector('.bingoContainer')
             for (let i = 0; i < bingoContainer.children.length; i++) {
                 const img = bingoContainer.children[i];
-                img.src = `./images/icon/${data[i][0]}`;
                 img.src = `./images/icon/${data[i][0]}`;
                 if (data[i][1])
                     img.classList.add('clicked');
@@ -303,4 +341,40 @@ async function status() {
 
 function closeStatus() {
     document.querySelector('.status').style.visibility = "hidden";
+}
+
+function share() {
+    const btn = document.querySelector('.saveLink');
+
+    const images = Array.from(document.querySelectorAll('.bingoContainer img'))
+        .map(img => [img.src.split('/').pop(), img.classList.contains('clicked')]);
+
+    const data = JSON.stringify(images);
+    const compressed = LZString.compressToBase64(data);
+
+    const url = `${window.location.href.split('?')[0]}?data=${encodeURIComponent(compressed)}`;
+
+    navigator.clipboard.writeText(url)
+    .then(() => {
+        btn.classList.add('btnSuccess');
+        btn.innerHTML = "COPIED TO CLIPBOARD!";
+
+        const audio = new Audio('./soundeffects/saved.wav');
+        audio.loop = false;
+        audio.play();
+
+        setTimeout(() => {
+            btn.classList.remove('btnSuccess');
+            btn.innerHTML = "COPY AS LINK";
+        }, 1000)
+    })
+    .catch(err => {
+        btn.classList.add('btnFailed');
+        btn.innerHTML = "FAILED TO COPY TO CLIPBOARD";
+
+        setTimeout(() => {
+            btn.classList.remove('btnFailed');
+            btn.innerHTML = "COPY AS LINK";
+        }, 1000)
+    });
 }

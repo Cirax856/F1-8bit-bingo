@@ -16,6 +16,7 @@
 
                 <button class="saveLocal" onclick="saveLocal();">SAVE TO LOCAL STORAGE</button>
                 <button class="saveCopy" onclick="saveCopy();">COPY AS TEXT</button>
+                <button class="saveLink" onclick="share()">COPY AS LINK</button>
                 <button onclick="saveFile();">SAVE AS FILE</button>
             </div>
         </div>
@@ -40,7 +41,7 @@
             </div>
         </div>
 
-        <div class="loadingAnimation"><p>LOADING</p></div>
+        <div class="loadingAnimation"><p>ERROR (check console)</p></div>
 
         <div class="title">FORMULA 1 BINGO 2025</div>
         <div class="bingoContainer"></div>
@@ -66,6 +67,7 @@
             </a>
         </div>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
         <script src="./script.js"></script>
     </body>
 </html>
