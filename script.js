@@ -46,9 +46,13 @@ function generate() {
                 if (image == "./images/icon/it_s lights out.png") {
                     img.classList.add('clicked');
                 } else {
-                    img.addEventListener('click', function() {
-                        img.classList.toggle('clicked');
-                    });
+                    if (!img.classList.contains("clicked") && !img.classList.contains("blocked")) {
+                        img.classList.add("clicked");
+                    } else if (img.classList.contains("clicked")) {
+                        img.classList.replace("clicked", "blocked");
+                    } else {
+                        img.classList.remove("blocked");
+                    }
                 }
             });
 
@@ -76,7 +80,13 @@ function generateEmpty() {
 
         if (i !== 12) {
             img.addEventListener('click', function() {
-                img.classList.toggle('clicked');
+                if (!img.classList.contains("clicked") && !img.classList.contains("blocked")) {
+                    img.classList.add("clicked");
+                } else if (img.classList.contains("clicked")) {
+                    img.classList.replace("clicked", "blocked");
+                } else {
+                    img.classList.remove("blocked");
+                }
             });
         }
     }
@@ -104,7 +114,10 @@ function saveLocal() {
     const btn = document.querySelector('.saveLocal');
 
     const images = Array.from(document.querySelectorAll('.bingoContainer img'))
-        .map(img => [img.src.split('/').pop(), img.classList.contains('clicked')]);
+        .map(img => [
+            img.src.split('/').pop(),
+            img.classList.contains('clicked') ? true : img.classList.contains('blocked') ? null : false
+        ]);
 
     localStorage.setItem('bingo', JSON.stringify(images));
 
@@ -125,7 +138,10 @@ function saveCopy() {
     const btn = document.querySelector('.saveCopy');
 
     const images = Array.from(document.querySelectorAll('.bingoContainer img'))
-        .map(img => [img.src.split('/').pop(), img.classList.contains('clicked')]);
+        .map(img => [
+            img.src.split('/').pop(),
+            img.classList.contains('clicked') ? true : img.classList.contains('blocked') ? null : false
+        ]);
 
     navigator.clipboard.writeText(JSON.stringify(images))
         .then(() => {
@@ -154,7 +170,10 @@ function saveCopy() {
 
 function saveFile() {
     const images = Array.from(document.querySelectorAll('.bingoContainer img'))
-        .map(img => [img.src.split('/').pop(), img.classList.contains('clicked')]);
+        .map(img => [
+            img.src.split('/').pop(),
+            img.classList.contains('clicked') ? true : img.classList.contains('blocked') ? null : false
+        ]);
 
     const blob = new Blob([JSON.stringify(images)], { type: 'text/plain' });
 
@@ -190,14 +209,23 @@ function loadUrl(data) {
         img.classList.add("bingoImage");
         bingoContainer.appendChild(img);
 
-        if (data[i][1])
+        if (data[i][1] === true) {
             img.classList.add('clicked');
+        } else if (data[i][1] === null) {
+            img.classList.add('blocked');
+        }
 
         if (i == 12) {
             img.classList.add('clicked');
         } else {
             img.addEventListener('click', function() {
-                img.classList.toggle('clicked');
+                if (!img.classList.contains("clicked") && !img.classList.contains("blocked")) {
+                    img.classList.add("clicked");
+                } else if (img.classList.contains("clicked")) {
+                    img.classList.replace("clicked", "blocked");
+                } else {
+                    img.classList.remove("blocked");
+                }
             });
         }
     }
@@ -223,8 +251,12 @@ function loadLocal() {
     for (let i = 0; i < bingoContainer.children.length; i++) {
         const img = bingoContainer.children[i];
         img.src = `./images/icon/${data[i][0]}`;
-        if (data[i][1])
+
+        if (data[i][1] === true) {
             img.classList.add('clicked');
+        } else if (data[i][1] === null) {
+            img.classList.add('blocked');
+        }
     }
 
     const audio = new Audio('./soundeffects/saved.wav');
@@ -243,8 +275,12 @@ function loadCopy() {
             for (let i = 0; i < bingoContainer.children.length; i++) {
                 const img = bingoContainer.children[i];
                 img.src = `./images/icon/${data[i][0]}`;
-                if (data[i][1])
+
+                if (data[i][1] === true) {
                     img.classList.add('clicked');
+                } else if (data[i][1] === null) {
+                    img.classList.add('blocked');
+                }
             }
 
             const audio = new Audio('./soundeffects/saved.wav');
@@ -289,8 +325,12 @@ function loadFile(data) {
     for (let i = 0; i < bingoContainer.children.length; i++) {
         const img = bingoContainer.children[i];
         img.src = `./images/icon/${data[i][0]}`;
-        if (data[i][1])
+
+        if (data[i][1] === true) {
             img.classList.add('clicked');
+        } else if (data[i][1] === null) {
+            img.classList.add('blocked');
+        }
     }
 
     const audio = new Audio('./soundeffects/saved.wav');
@@ -347,7 +387,10 @@ function share() {
     const btn = document.querySelector('.saveLink');
 
     const images = Array.from(document.querySelectorAll('.bingoContainer img'))
-        .map(img => [img.src.split('/').pop(), img.classList.contains('clicked')]);
+        .map(img => [
+            img.src.split('/').pop(),
+            img.classList.contains('clicked') ? true : img.classList.contains('blocked') ? null : false
+        ]);
 
     const data = JSON.stringify(images);
     const compressed = LZString.compressToBase64(data);
