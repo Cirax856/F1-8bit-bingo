@@ -46,13 +46,15 @@ function generate() {
                 if (image == "./images/icon/it_s lights out.png") {
                     img.classList.add('clicked');
                 } else {
-                    if (!img.classList.contains("clicked") && !img.classList.contains("blocked")) {
-                        img.classList.add("clicked");
-                    } else if (img.classList.contains("clicked")) {
-                        img.classList.replace("clicked", "blocked");
-                    } else {
-                        img.classList.remove("blocked");
-                    }
+                    img.addEventListener('click', () => {
+                        if (!img.classList.contains("clicked") && !img.classList.contains("blocked")) {
+                            img.classList.add("clicked");
+                        } else if (img.classList.contains("clicked")) {
+                            img.classList.replace("clicked", "blocked");
+                        } else {
+                            img.classList.remove("blocked");
+                        }
+                    });
                 }
             });
 
